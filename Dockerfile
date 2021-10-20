@@ -28,6 +28,7 @@ ENV AWS_GLUE_LIB_BRANCH=glue-2.0
 ARG spark_archive=spark-2.4.3-bin-hadoop2.8.tgz
 
 RUN git clone --branch ${AWS_GLUE_LIB_BRANCH} --depth 1 https://github.com/awslabs/aws-glue-libs
+COPY ./glue-setup.sh /home/aws-glue-libs/bin/glue-setup.sh
 
 # Install Apache Spark distribution
 RUN mkdir -p spark && \
@@ -38,6 +39,7 @@ RUN mkdir -p spark && \
 ENV PATH=${PATH}:/home/aws-glue-libs/bin:/home/apache-maven/bin
 ENV SPARK_HOME=/home/spark
 
+COPY ./spark-defaults.conf ${SPARK_HOME}/conf/spark-defaults.conf
 RUN ln -s ${SPARK_HOME}/jars /home/aws-glue-libs/jarsv1
 # Install dependencies
 RUN /home/aws-glue-libs/bin/gluepyspark
@@ -51,6 +53,7 @@ ENV AWS_GLUE_LIB_BRANCH=master
 ARG spark_archive=spark-3.1.1-amzn-0-bin-3.2.1-amzn-3.tgz
 
 RUN git clone --branch ${AWS_GLUE_LIB_BRANCH} --depth 1 https://github.com/awslabs/aws-glue-libs
+COPY ./glue-setup.sh /home/aws-glue-libs/bin/glue-setup.sh
 
 # Install Apache Spark distribution
 RUN mkdir -p spark && \
@@ -61,6 +64,7 @@ RUN mkdir -p spark && \
 ENV PATH=${PATH}:/home/aws-glue-libs/bin:/home/apache-maven/bin
 ENV SPARK_HOME=/home/spark
 
+COPY ./spark-defaults.conf ${SPARK_HOME}/conf/spark-defaults.conf
 RUN ln -s ${SPARK_HOME}/jars /home/aws-glue-libs/jarsv1
 # Install dependencies
 RUN /home/aws-glue-libs/bin/gluepyspark
