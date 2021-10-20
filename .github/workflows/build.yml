@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event.pull_request.merged == 'true' }}
+          push: ${{ github.event.pull_request.merged == true }}
           tags: ${{ steps.meta.outputs.tags }}
           target: ${{ matrix.glue-version }}
           labels: ${{ steps.meta.outputs.labels }}
