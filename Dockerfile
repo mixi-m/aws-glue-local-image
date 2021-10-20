@@ -1,5 +1,7 @@
 FROM openjdk:8-jdk-buster as base
 
+LABEL org.opencontainers.image.source=https://github.com/ratel-pay/aws-glue-local-image
+
 ENV AWS_GLUE_ETL_ARTIFACTS_URL=https://aws-glue-etl-artifacts.s3.amazonaws.com
 ARG apache_maven=apache-maven-3.6.0-bin.tar.gz
 
