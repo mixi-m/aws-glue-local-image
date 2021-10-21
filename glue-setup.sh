@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+ROOT_DIR="$(cd $(dirname "$0")/..; pwd)"
+cd $ROOT_DIR
+
+SPARK_CONF_DIR=$ROOT_DIR/conf
+GLUE_JARS_DIR=$ROOT_DIR/jars
+
+PYTHONPATH="$SPARK_HOME/python/:$PYTHONPATH"
+PYTHONPATH=`ls $SPARK_HOME/python/lib/py4j-*-src.zip`:"$PYTHONPATH"
+
+# Generate the zip archive for glue python modules
+rm PyGlue.zip
+zip -r PyGlue.zip awsglue
+GLUE_PY_FILES="$ROOT_DIR/PyGlue.zip"
+export PYTHONPATH="$GLUE_PY_FILES:$PYTHONPATH"
+
+# Run mvn copy-dependencies target to get the Glue dependencies locally
+mvn -q -f $ROOT_DIR/pom.xml -DoutputDirectory=$ROOT_DIR/jars dependency:copy-dependencies
+
+export SPARK_CONF_DIR=${ROOT_DIR}/conf
+mkdir $SPARK_CONF_DIR
+rm $SPARK_CONF_DIR/spark-defaults.conf
+# Generate spark-defaults.conf
+echo "spark.driver.extraClassPath $GLUE_JARS_DIR/*" >> $SPARK_CONF_DIR/spark-defaults.conf
+echo "spark.executor.extraClassPath $GLUE_JARS_DIR/*" >> $SPARK_CONF_DIR/spark-defaults.conf
+# Glueのユニットテスト用に設定追加
+echo "spark.hadoop.dynamodb.endpoint http://localstack:4566" >> $SPARK_CONF_DIR/spark-defaults.conf
+echo "spark.hadoop.fs.s3a.endpoint http://localstack:4566" >> $SPARK_CONF_DIR/spark-defaults.conf
+echo "spark.hadoop.fs.s3a.path.style.access true" >> $SPARK_CONF_DIR/spark-defaults.conf
+echo "spark.hadoop.fs.s3a.signing-algorithm S3SignerType" >> $SPARK_CONF_DIR/spark-defaults.conf
+
+# Restore present working directory
+cd -
