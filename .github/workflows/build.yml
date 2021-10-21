@@ -44,6 +44,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event.pull_request.merged == true }}
+          pull: true
           tags: ${{ steps.meta.outputs.tags }}
           target: ${{ matrix.glue-version }}
           labels: ${{ steps.meta.outputs.labels }}
