@@ -1,6 +1,8 @@
 name: build and push
 on:
   push:
+   branches-ignore:
+     - main
   pull_request:
     branches:
       - main
@@ -42,9 +44,10 @@ jobs:
         with:
           context: .
           push: ${{ github.event.pull_request.merged == true }}
+          pull: true
           tags: ${{ steps.meta.outputs.tags }}
           target: ${{ matrix.glue-version }}
           labels: ${{ steps.meta.outputs.labels }}
-          # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#github-cache
-          cache-from: type=gha
-          cache-to: type=gha
+          # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#inline-cache
+          cache-from: type=registry,ref=${{ steps.meta.outputs.tags }}
+          cache-to: type=inline
