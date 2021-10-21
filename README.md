@@ -7,7 +7,7 @@ Please refer to the [AWS Glue Developer Guide - Developing Locally using Docker 
 
 ## How to use Docker images
 
-The images are published to GitHub Container Registry so that you can pull images like this:
+The images are published to [GitHub Container Registry](https://github.com/ratel-pay/aws-glue-local-image/pkgs/container/aws-glue-local-image) so that you can pull images like this:
 
 ```
 $ docker pull ghcr.io/ratel-pay/aws-glue-local-image:glue-2.0
