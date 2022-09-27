@@ -30,6 +30,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: setup QEMU
+        uses: docker/setup-qemu-action@v2
       - name: setup docker buildx
         uses: docker/setup-buildx-action@v2
       - name: docker metadata
@@ -43,6 +45,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event.pull_request.merged == true }}
           pull: true
           tags: ${{ steps.meta.outputs.tags }}
